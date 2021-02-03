@@ -41,7 +41,7 @@ MerchantID  綠界參數
 TotalAmount 綠界參數
 */
 
-func SendPostToEcPay(MemberId int, MerchantID string, TotalAmount int, TradeDesc string, ItemName string) (err error) {
+func SendPostToEcPayPeriod(MemberId int, MerchantID string, TotalAmount int, TradeDesc string, ItemName string) (err error) {
 	MerchantTradeNo := generateMerchantTradeNo(MemberId)
 	MerchantTradeDate := time.Now().Format("2006/01/02 15:04:05")
 	PaymentType := "aio"
@@ -53,5 +53,9 @@ func SendPostToEcPay(MemberId int, MerchantID string, TotalAmount int, TradeDesc
 	fmt.Print("\nTradeDesc=", TradeDesc)
 	fmt.Print("\nItemName=", ItemName)
 	fmt.Print("\n")
+	return
+}
+
+func SendPostToEcPayOnce(MemberId int, MerchantID string, TotalAmount int, TradeDesc string, ItemName string) (err error) {
 	return
 }
