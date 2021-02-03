@@ -3,14 +3,18 @@ package Ecpayby77
 import (
 	"fmt"
 	"net/url"
+	"strconv"
 	"strings"
 	"time"
 )
 
-func generateMerchantTradeNo() (No string) {
-	timeNow := time.Now()
-	timeString := timeNow.Format("20060102150405000")
-	No = timeString
+func generateMerchantTradeNo(MemberId int) (No string) {
+	time := time.Now().UnixNano() / 1e6
+	timeString := strconv.FormatInt(time, 16)
+
+	sMemberId := strconv.Itoa(MemberId)
+
+	No = timeString + sMemberId
 	Count := strings.Count(No, "")
 
 	fmt.Print("string Count=", Count, " MerchantTradeNo=", No, "\n")
@@ -38,7 +42,7 @@ TotalAmount 綠界參數
 */
 
 func SendPostToEcPay(MemberId int, MerchantID string, TotalAmount int, TradeDesc string, ItemName string) (err error) {
-	MerchantTradeNo := generateMerchantTradeNo()
+	MerchantTradeNo := generateMerchantTradeNo(MemberId)
 	MerchantTradeDate := time.Now().Format("2006/01/02 15:04:05")
 	PaymentType := "aio"
 	TradeDesc = FormUrlEncode(TradeDesc)
