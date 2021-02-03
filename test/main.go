@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	Ecpayby77.SendPostToEcPay(12, "2000132", 2399, "85VIP", "VIP30天")
+	Ecpayby77.SendPostToEcPayPeriod(12, "2000132", 2399, "85VIP", "VIP30天", "https://85sugarbaby.com.tw/CallbackReturnURL")
 }

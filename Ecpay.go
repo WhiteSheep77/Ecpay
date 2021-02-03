@@ -41,17 +41,19 @@ MerchantID  綠界參數
 TotalAmount 綠界參數
 */
 
-func SendPostToEcPayPeriod(MemberId int, MerchantID string, TotalAmount int, TradeDesc string, ItemName string) (err error) {
+func SendPostToEcPayPeriod(MemberId int, MerchantID string, TotalAmount int, TradeDesc string, ItemName string, ReturnURL string) (err error) {
 	MerchantTradeNo := generateMerchantTradeNo(MemberId)
 	MerchantTradeDate := time.Now().Format("2006/01/02 15:04:05")
 	PaymentType := "aio"
 	TradeDesc = FormUrlEncode(TradeDesc)
+	ChoosePayment := "Credit"
 
 	fmt.Print("\nMerchantTradeNo=", MerchantTradeNo)
 	fmt.Print("\nMerchantTradeDate=", MerchantTradeDate)
 	fmt.Print("\nPaymentType=", PaymentType)
 	fmt.Print("\nTradeDesc=", TradeDesc)
 	fmt.Print("\nItemName=", ItemName)
+	fmt.Print("\nChoosePayment=", ChoosePayment)
 	fmt.Print("\n")
 	return
 }
