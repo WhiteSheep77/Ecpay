@@ -41,12 +41,21 @@ MerchantID  綠界參數
 TotalAmount 綠界參數
 */
 
-func SendPostToEcPayPeriod(MemberId int, MerchantID string, TotalAmount int, TradeDesc string, ItemName string, ReturnURL string) (err error) {
+func SendPostToEcPayPeriod(MemberId int, MerchantID string, TotalAmount int, TradeDesc string, ItemName string, ReturnURL string, ClientBackURL string, PeriodReturnURL string, RelateNumber string, CustomerIdentifier string, CustomerEmail string, CarruerType string, CarruerNum string, Donation string, LoveCode string, Print string) (err error) {
 	MerchantTradeNo := generateMerchantTradeNo(MemberId)
 	MerchantTradeDate := time.Now().Format("2006/01/02 15:04:05")
 	PaymentType := "aio"
 	TradeDesc = FormUrlEncode(TradeDesc)
 	ChoosePayment := "Credit"
+	ItemURL := ClientBackURL
+	InvoiceMark := "Y"
+	CustomField1 := strconv.Itoa(MemberId)
+	EncryptType := 1
+	PeriodAmount := TotalAmount
+	PeriodType := "D"
+	Frequency := 30
+	ExecTimes := 999
+	TaxType := 1
 
 	fmt.Print("\nMerchantTradeNo=", MerchantTradeNo)
 	fmt.Print("\nMerchantTradeDate=", MerchantTradeDate)
@@ -54,6 +63,18 @@ func SendPostToEcPayPeriod(MemberId int, MerchantID string, TotalAmount int, Tra
 	fmt.Print("\nTradeDesc=", TradeDesc)
 	fmt.Print("\nItemName=", ItemName)
 	fmt.Print("\nChoosePayment=", ChoosePayment)
+	fmt.Print("\nReturnURL=", ReturnURL)
+	fmt.Print("\nClientBackURL=", ClientBackURL)
+	fmt.Print("\nItemURL=", ItemURL)
+	fmt.Print("\nInvoiceMark=", InvoiceMark)
+	fmt.Print("\nCustomField1=", CustomField1)
+	fmt.Print("\nEncryptType=", EncryptType)
+	fmt.Print("\nPeriodAmount=", PeriodAmount)
+	fmt.Print("\nPeriodType=", PeriodType)
+	fmt.Print("\nFrequency=", Frequency)
+	fmt.Print("\nExecTimes=", ExecTimes)
+	fmt.Print("\nPeriodReturnURL=", PeriodReturnURL)
+	fmt.Print("\nTaxType=", TaxType)
 	fmt.Print("\n")
 	return
 }
