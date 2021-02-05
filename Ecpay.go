@@ -41,7 +41,7 @@ MerchantID  綠界參數
 TotalAmount 綠界參數
 */
 
-func SendPostToEcPayPeriod(MemberId int, MerchantID string, TotalAmount int, TradeDesc string, ItemName string, ReturnURL string, ClientBackURL string, PeriodReturnURL string, RelateNumber string, CustomerIdentifier string, CustomerEmail string, CarruerType string, CarruerNum string, Donation string, LoveCode string, Print string) (err error) {
+func SendPostToEcPayPeriod(MemberId int, MerchantID string, TotalAmount int, TradeDesc string, ItemName string, ReturnURL string, ClientBackURL string, PeriodReturnURL string, RelateNumber string, CustomerIdentifier string, CustomerEmail string, CarruerType string, CarruerNum string, Donation string, LoveCode string, Print string, InvoiceItemName string, InvoiceItemCount string, InvoiceItemWord string, InvoiceItemPrice string) (err error) {
 	MerchantTradeNo := generateMerchantTradeNo(MemberId)
 	MerchantTradeDate := time.Now().Format("2006/01/02 15:04:05")
 	PaymentType := "aio"
@@ -56,6 +56,11 @@ func SendPostToEcPayPeriod(MemberId int, MerchantID string, TotalAmount int, Tra
 	Frequency := 30
 	ExecTimes := 999
 	TaxType := 1
+	CustomerEmail = FormUrlEncode(CustomerEmail)
+	InvoiceItemName = FormUrlEncode(InvoiceItemName)
+	InvoiceItemWord = FormUrlEncode(InvoiceItemWord)
+	DelayDay := 0
+	InvType := "07"
 
 	fmt.Print("\nMerchantTradeNo=", MerchantTradeNo)
 	fmt.Print("\nMerchantTradeDate=", MerchantTradeDate)
@@ -75,6 +80,8 @@ func SendPostToEcPayPeriod(MemberId int, MerchantID string, TotalAmount int, Tra
 	fmt.Print("\nExecTimes=", ExecTimes)
 	fmt.Print("\nPeriodReturnURL=", PeriodReturnURL)
 	fmt.Print("\nTaxType=", TaxType)
+	fmt.Print("\nDelayDay=", DelayDay)
+	fmt.Print("\nInvType=", InvType)
 	fmt.Print("\n")
 	return
 }
