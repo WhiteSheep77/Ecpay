@@ -1,6 +1,7 @@
 package Ecpayby77
 
 import (
+	"crypto/sha256"
 	"fmt"
 	"net/url"
 	"strconv"
@@ -46,11 +47,11 @@ type EcPayParm struct {
 	Value     string
 }
 
-func SendPostToEcPayPeriod(MemberId int, MerchantID string, ITotalAmount int, TradeDesc string, ItemName string, ReturnURL string, ClientBackURL string, PeriodReturnURL string, RelateNumber string, CustomerIdentifier string, CustomerEmail string, CarruerType string, CarruerNum string, Donation string, LoveCode string, Print string, InvoiceItemName string, InvoiceItemCount string, InvoiceItemWord string, InvoiceItemPrice string) (err error) {
+func SendPostToEcPayPeriod(MemberId int, MerchantID string, ITotalAmount int, TradeDesc string, ItemName string, ReturnURL string, ClientBackURL string, PeriodReturnURL string, RelateNumber string, CustomerIdentifier string, CustomerEmail string, CarruerType string, CarruerNum string, Donation string, LoveCode string, Print string, InvoiceItemName string, InvoiceItemCount string, InvoiceItemWord string, InvoiceItemPrice string, HashKey string, HashIV string) (err error) {
 	MerchantTradeNo := generateMerchantTradeNo(MemberId)
 	MerchantTradeDate := time.Now().Format("2006/01/02 15:04:05")
 	PaymentType := "aio"
-	TradeDesc = FormUrlEncode(TradeDesc)
+
 	ChoosePayment := "Credit"
 	ItemURL := ClientBackURL
 	InvoiceMark := "Y"
@@ -62,11 +63,15 @@ func SendPostToEcPayPeriod(MemberId int, MerchantID string, ITotalAmount int, Tr
 	Frequency := strconv.Itoa(30)
 	ExecTimes := strconv.Itoa(999)
 	TaxType := "1"
-	CustomerEmail = FormUrlEncode(CustomerEmail)
-	InvoiceItemName = FormUrlEncode(InvoiceItemName)
-	InvoiceItemWord = FormUrlEncode(InvoiceItemWord)
 	DelayDay := "0"
 	InvType := "07"
+
+	/*
+		TradeDesc = FormUrlEncode(TradeDesc)
+		CustomerEmail = FormUrlEncode(CustomerEmail)
+		InvoiceItemName = FormUrlEncode(InvoiceItemName)
+		InvoiceItemWord = FormUrlEncode(InvoiceItemWord)
+	*/
 
 	slice := []EcPayParm{}
 	//按照字母排列 //
@@ -114,7 +119,37 @@ func SendPostToEcPayPeriod(MemberId int, MerchantID string, ITotalAmount int, Tr
 	slice = append(slice, EcPayParm{"TotalAmount", TotalAmount})
 	slice = append(slice, EcPayParm{"TradeDesc", TradeDesc})
 
-	fmt.Print(slice)
+	var CheckMacValue string = ""
+
+	for i := 0; i < len(slice); i++ {
+		if slice[i].Value == "" {
+			continue
+		}
+
+		if CheckMacValue != "" {
+			CheckMacValue = CheckMacValue + "&"
+		}
+
+		CheckMacValue = CheckMacValue + slice[i].Parameter + "=" + slice[i].Value
+	}
+
+	CheckMacValue = "HashKey=" + HashKey + "&" + CheckMacValue + "&HashIV=" + HashIV
+	fmt.Print("\nCheckMacValue=", CheckMacValue)
+
+	CheckMacValue = FormUrlEncode(CheckMacValue)
+	fmt.Print("\nCheckMacValue=", CheckMacValue)
+
+	CheckMacValue = strings.ToLower(CheckMacValue)
+	fmt.Print("\nCheckMacValue=", CheckMacValue)
+
+	sum := sha256.Sum256([]byte(CheckMacValue))
+	fmt.Printf("\n%x", sum)
+
+	CheckMacValue = fmt.Sprintf("%x", sum)
+	fmt.Print("\nCheckMacValue=", CheckMacValue)
+
+	CheckMacValue = strings.ToUpper(CheckMacValue)
+	fmt.Print("\nCheckMacValue=", CheckMacValue)
 
 	fmt.Print("\nMerchantTradeNo=", MerchantTradeNo)
 	fmt.Print("\nMerchantTradeDate=", MerchantTradeDate)
