@@ -41,7 +41,12 @@ MerchantID  綠界參數
 TotalAmount 綠界參數
 */
 
-func SendPostToEcPayPeriod(MemberId int, MerchantID string, TotalAmount int, TradeDesc string, ItemName string, ReturnURL string, ClientBackURL string, PeriodReturnURL string, RelateNumber string, CustomerIdentifier string, CustomerEmail string, CarruerType string, CarruerNum string, Donation string, LoveCode string, Print string, InvoiceItemName string, InvoiceItemCount string, InvoiceItemWord string, InvoiceItemPrice string) (err error) {
+type EcPayParm struct {
+	Parameter string
+	Value     string
+}
+
+func SendPostToEcPayPeriod(MemberId int, MerchantID string, ITotalAmount int, TradeDesc string, ItemName string, ReturnURL string, ClientBackURL string, PeriodReturnURL string, RelateNumber string, CustomerIdentifier string, CustomerEmail string, CarruerType string, CarruerNum string, Donation string, LoveCode string, Print string, InvoiceItemName string, InvoiceItemCount string, InvoiceItemWord string, InvoiceItemPrice string) (err error) {
 	MerchantTradeNo := generateMerchantTradeNo(MemberId)
 	MerchantTradeDate := time.Now().Format("2006/01/02 15:04:05")
 	PaymentType := "aio"
@@ -50,17 +55,66 @@ func SendPostToEcPayPeriod(MemberId int, MerchantID string, TotalAmount int, Tra
 	ItemURL := ClientBackURL
 	InvoiceMark := "Y"
 	CustomField1 := strconv.Itoa(MemberId)
-	EncryptType := 1
-	PeriodAmount := TotalAmount
+	EncryptType := "1"
+	PeriodAmount := strconv.Itoa(ITotalAmount)
+	TotalAmount := strconv.Itoa(ITotalAmount)
 	PeriodType := "D"
-	Frequency := 30
-	ExecTimes := 999
-	TaxType := 1
+	Frequency := strconv.Itoa(30)
+	ExecTimes := strconv.Itoa(999)
+	TaxType := "1"
 	CustomerEmail = FormUrlEncode(CustomerEmail)
 	InvoiceItemName = FormUrlEncode(InvoiceItemName)
 	InvoiceItemWord = FormUrlEncode(InvoiceItemWord)
-	DelayDay := 0
+	DelayDay := "0"
 	InvType := "07"
+
+	slice := []EcPayParm{}
+	//按照字母排列 //
+	slice = append(slice, EcPayParm{"CarruerNum", CarruerType})
+	slice = append(slice, EcPayParm{"CarruerType", CarruerType})
+	slice = append(slice, EcPayParm{"ChoosePayment", ChoosePayment})
+	slice = append(slice, EcPayParm{"ClientBackURL", ClientBackURL})
+	slice = append(slice, EcPayParm{"CustomerEmail", CustomerEmail})
+	slice = append(slice, EcPayParm{"CustomerIdentifier", CustomerIdentifier})
+	slice = append(slice, EcPayParm{"CustomField1", CustomField1})
+
+	slice = append(slice, EcPayParm{"DelayDay", DelayDay})
+	slice = append(slice, EcPayParm{"Donation", Donation})
+
+	slice = append(slice, EcPayParm{"EncryptType", EncryptType})
+	slice = append(slice, EcPayParm{"ExecTimes", ExecTimes})
+
+	slice = append(slice, EcPayParm{"Frequency", Frequency})
+
+	slice = append(slice, EcPayParm{"InvoiceItemCount", InvoiceItemCount})
+	slice = append(slice, EcPayParm{"InvoiceItemName", InvoiceItemName})
+	slice = append(slice, EcPayParm{"InvoiceItemPrice", InvoiceItemPrice})
+	slice = append(slice, EcPayParm{"InvoiceItemWord", InvoiceItemWord})
+	slice = append(slice, EcPayParm{"InvoiceMark", InvoiceMark})
+	slice = append(slice, EcPayParm{"InvType", InvType})
+	slice = append(slice, EcPayParm{"ItemName", ItemName})
+	slice = append(slice, EcPayParm{"ItemURL", ItemURL})
+
+	slice = append(slice, EcPayParm{"LoveCode", LoveCode})
+
+	slice = append(slice, EcPayParm{"MerchantID", MerchantID})
+	slice = append(slice, EcPayParm{"MerchantTradeDate", MerchantTradeDate})
+	slice = append(slice, EcPayParm{"MerchantTradeNo", MerchantTradeNo})
+
+	slice = append(slice, EcPayParm{"PaymentType", PaymentType})
+	slice = append(slice, EcPayParm{"PeriodAmount", PeriodAmount})
+	slice = append(slice, EcPayParm{"PeriodReturnURL", PeriodReturnURL})
+	slice = append(slice, EcPayParm{"PeriodType", PeriodType})
+	slice = append(slice, EcPayParm{"Print", Print})
+
+	slice = append(slice, EcPayParm{"RelateNumber", RelateNumber})
+	slice = append(slice, EcPayParm{"ReturnURL", ReturnURL})
+
+	slice = append(slice, EcPayParm{"TaxType", TaxType})
+	slice = append(slice, EcPayParm{"TotalAmount", TotalAmount})
+	slice = append(slice, EcPayParm{"TradeDesc", TradeDesc})
+
+	fmt.Print(slice)
 
 	fmt.Print("\nMerchantTradeNo=", MerchantTradeNo)
 	fmt.Print("\nMerchantTradeDate=", MerchantTradeDate)
