@@ -47,7 +47,7 @@ type EcPayParm struct {
 	Value     string
 }
 
-func SendPostToEcPayPeriod(MemberId int, MerchantID string, ITotalAmount int, TradeDesc string, ItemName string, ReturnURL string, ClientBackURL string, PeriodReturnURL string, RelateNumber string, CustomerIdentifier string, CustomerEmail string, CarruerType string, CarruerNum string, Donation string, LoveCode string, Print string, InvoiceItemName string, InvoiceItemCount string, InvoiceItemWord string, InvoiceItemPrice string, HashKey string, HashIV string) (err error) {
+func SendPostToEcPayPeriod(MemberId int, MerchantID string, ITotalAmount int, TradeDesc string, ItemName string, ReturnURL string, ClientBackURL string, PeriodReturnURL string, RelateNumber string, CustomerIdentifier string, CustomerEmail string, CarruerType string, CarruerNum string, Donation string, LoveCode string, Print string, InvoiceItemName string, InvoiceItemCount string, InvoiceItemWord string, InvoiceItemPrice string, HashKey string, HashIV string) (CheckMacValue string, slice []EcPayParm) {
 	MerchantTradeNo := generateMerchantTradeNo(MemberId)
 	MerchantTradeDate := time.Now().Format("2006/01/02 15:04:05")
 	PaymentType := "aio"
@@ -73,7 +73,7 @@ func SendPostToEcPayPeriod(MemberId int, MerchantID string, ITotalAmount int, Tr
 		InvoiceItemWord = FormUrlEncode(InvoiceItemWord)
 	*/
 
-	slice := []EcPayParm{}
+	slice = []EcPayParm{}
 	//按照字母排列 //
 	slice = append(slice, EcPayParm{"CarruerNum", CarruerType})
 	slice = append(slice, EcPayParm{"CarruerType", CarruerType})
@@ -119,7 +119,7 @@ func SendPostToEcPayPeriod(MemberId int, MerchantID string, ITotalAmount int, Tr
 	slice = append(slice, EcPayParm{"TotalAmount", TotalAmount})
 	slice = append(slice, EcPayParm{"TradeDesc", TradeDesc})
 
-	var CheckMacValue string = ""
+	CheckMacValue = ""
 
 	for i := 0; i < len(slice); i++ {
 		if slice[i].Value == "" {
@@ -172,7 +172,7 @@ func SendPostToEcPayPeriod(MemberId int, MerchantID string, ITotalAmount int, Tr
 	fmt.Print("\nDelayDay=", DelayDay)
 	fmt.Print("\nInvType=", InvType)
 	fmt.Print("\n")
-	return
+	return CheckMacValue, slice
 }
 
 func SendPostToEcPayOnce(MemberId int, MerchantID string, TotalAmount int, TradeDesc string, ItemName string) (err error) {
