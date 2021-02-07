@@ -47,7 +47,7 @@ type EcPayParm struct {
 	Value     string
 }
 
-func SendPostToEcPayPeriod(MemberId int, MerchantID string, ITotalAmount int, TradeDesc string, ItemName string, ReturnURL string, ClientBackURL string, PeriodReturnURL string, CustomerIdentifier string, CustomerEmail string, CarruerType string, CarruerNum string, Donation string, LoveCode string, Print string, InvoiceItemName string, InvoiceItemCount string, InvoiceItemWord string, InvoiceItemPrice string, HashKey string, HashIV string) (CheckMacValue string, slice []EcPayParm) {
+func SendPostToEcPayPeriod(MemberId int, MerchantID string, ITotalAmount int, TradeDesc string, ItemName string, ReturnURL string, ClientBackURL string, PeriodReturnURL string, CustomerIdentifier string, CustomerEmail string, CarruerType string, CarruerNum string, Donation string, LoveCode string, Print string, InvoiceItemName string, InvoiceItemCount string, InvoiceItemWord string, InvoiceItemPrice string, CustomerName string, CustomerAddr string, HashKey string, HashIV string) (CheckMacValue string, slice []EcPayParm) {
 	MerchantTradeNo := generateMerchantTradeNo(MemberId)
 	MerchantTradeDate := time.Now().Format("2006/01/02 15:04:05")
 	PaymentType := "aio"
@@ -75,12 +75,15 @@ func SendPostToEcPayPeriod(MemberId int, MerchantID string, ITotalAmount int, Tr
 
 	slice = []EcPayParm{}
 	//按照字母排列 //
-	slice = append(slice, EcPayParm{"CarruerNum", CarruerType})
+
+	slice = append(slice, EcPayParm{"CarruerNum", CarruerNum})
 	slice = append(slice, EcPayParm{"CarruerType", CarruerType})
 	slice = append(slice, EcPayParm{"ChoosePayment", ChoosePayment})
 	slice = append(slice, EcPayParm{"ClientBackURL", ClientBackURL})
+	slice = append(slice, EcPayParm{"CustomerAddr", CustomerAddr})
 	slice = append(slice, EcPayParm{"CustomerEmail", CustomerEmail})
 	slice = append(slice, EcPayParm{"CustomerIdentifier", CustomerIdentifier})
+	slice = append(slice, EcPayParm{"CustomerName", CustomerName})
 	slice = append(slice, EcPayParm{"CustomField1", CustomField1})
 
 	slice = append(slice, EcPayParm{"DelayDay", DelayDay})
@@ -180,6 +183,7 @@ func SendPostToEcPayPeriod(MemberId int, MerchantID string, ITotalAmount int, Tr
 	fmt.Print("\nTaxType=", TaxType)
 	fmt.Print("\nDelayDay=", DelayDay)
 	fmt.Print("\nInvType=", InvType)
+	fmt.Print("\nCarruerNum=", CarruerNum)
 	fmt.Print("\n")
 	return CheckMacValue, SliceFinal
 }
