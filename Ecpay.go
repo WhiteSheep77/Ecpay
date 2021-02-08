@@ -9,11 +9,11 @@ import (
 	"time"
 )
 
-func generateMerchantTradeNo(MemberId int) (No string) {
+func generateMerchantTradeNo(MemberId string) (No string) {
 	time := time.Now().UnixNano() / 1e6
 	timeString := strconv.FormatInt(time, 16)
 
-	sMemberId := strconv.Itoa(MemberId)
+	sMemberId := MemberId
 
 	No = timeString + sMemberId
 	Count := strings.Count(No, "")
@@ -34,28 +34,62 @@ func FormUrlEncode(s string) string {
 	return s
 }
 
-/*
-綠界的參數請參考 https://www.ecpay.com.tw/Content/files/ecpay_011.pdf
-
-MemberId 自己商場會員的ID 用於自己識別
-MerchantID  綠界參數
-TotalAmount 綠界參數
-*/
-
 type EcPayParm struct {
 	Parameter string
 	Value     string
 }
 
-func SendPostToEcPayPeriod(MemberId int, MerchantID string, ITotalAmount int, TradeDesc string, ItemName string, ReturnURL string, ClientBackURL string, PeriodReturnURL string, CustomerIdentifier string, CustomerEmail string, CarruerType string, CarruerNum string, Donation string, LoveCode string, Print string, InvoiceItemName string, InvoiceItemCount string, InvoiceItemWord string, InvoiceItemPrice string, CustomerName string, CustomerAddr string, HashKey string, HashIV string) (CheckMacValue string, slice []EcPayParm) {
-	MerchantTradeNo := generateMerchantTradeNo(MemberId)
+func EcpayCheckMacValue(RecvCheckMacValue string, slice []EcPayParm, HashKey string, HashIV string) (IsCheckOK bool) {
+
+	CheckMacValue := ""
+	for i := 0; i < len(slice); i++ {
+		if slice[i].Parameter == "CheckMacValue" {
+			continue
+		}
+
+		if CheckMacValue != "" {
+			CheckMacValue = CheckMacValue + "&"
+		}
+
+		CheckMacValue = CheckMacValue + slice[i].Parameter + "=" + slice[i].Value
+	}
+
+	CheckMacValue = "HashKey=" + HashKey + "&" + CheckMacValue + "&HashIV=" + HashIV
+	fmt.Print("\nCheckMacValue=", CheckMacValue)
+
+	CheckMacValue = FormUrlEncode(CheckMacValue)
+	fmt.Print("\nCheckMacValue=", CheckMacValue)
+
+	CheckMacValue = strings.ToLower(CheckMacValue)
+	fmt.Print("\nCheckMacValue=", CheckMacValue)
+
+	sum := sha256.Sum256([]byte(CheckMacValue))
+	fmt.Printf("\n%x", sum)
+
+	CheckMacValue = fmt.Sprintf("%x", sum)
+	fmt.Print("\nCheckMacValue=", CheckMacValue)
+
+	CheckMacValue = strings.ToUpper(CheckMacValue)
+	fmt.Print("\nCheckMacValue=", CheckMacValue)
+
+	if RecvCheckMacValue == CheckMacValue {
+		return true
+	}
+	return false
+}
+
+/*
+綠界的參數請參考 https://www.ecpay.com.tw/Content/files/ecpay_011.pdf
+*/
+
+func SendPostToEcPayPeriod(CustomField1 string, CustomField2 string, MerchantID string, ITotalAmount int, TradeDesc string, ItemName string, ReturnURL string, ClientBackURL string, PeriodReturnURL string, CustomerIdentifier string, CustomerEmail string, CarruerType string, CarruerNum string, Donation string, LoveCode string, Print string, InvoiceItemName string, InvoiceItemCount string, InvoiceItemWord string, InvoiceItemPrice string, CustomerName string, CustomerAddr string, HashKey string, HashIV string) (CheckMacValue string, slice []EcPayParm) {
+	MerchantTradeNo := generateMerchantTradeNo(CustomField1)
 	MerchantTradeDate := time.Now().Format("2006/01/02 15:04:05")
 	PaymentType := "aio"
 	RelateNumber := MerchantTradeNo
 	ChoosePayment := "Credit"
 	ItemURL := ClientBackURL
 	InvoiceMark := "Y"
-	CustomField1 := strconv.Itoa(MemberId)
 	EncryptType := "1"
 	PeriodAmount := strconv.Itoa(ITotalAmount)
 	TotalAmount := strconv.Itoa(ITotalAmount)
@@ -85,6 +119,7 @@ func SendPostToEcPayPeriod(MemberId int, MerchantID string, ITotalAmount int, Tr
 	slice = append(slice, EcPayParm{"CustomerIdentifier", CustomerIdentifier})
 	slice = append(slice, EcPayParm{"CustomerName", CustomerName})
 	slice = append(slice, EcPayParm{"CustomField1", CustomField1})
+	slice = append(slice, EcPayParm{"CustomField2", CustomField2})
 
 	slice = append(slice, EcPayParm{"DelayDay", DelayDay})
 	slice = append(slice, EcPayParm{"Donation", Donation})
