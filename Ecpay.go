@@ -82,7 +82,7 @@ func EcpayCheckMacValue(RecvCheckMacValue string, slice []EcPayParm, HashKey str
 綠界的參數請參考 https://www.ecpay.com.tw/Content/files/ecpay_011.pdf
 */
 
-func SendPostToEcPayPeriod(CustomField1 string, CustomField2 string, MerchantID string, ITotalAmount int, TradeDesc string, ItemName string, ReturnURL string, ClientBackURL string, PeriodReturnURL string, CustomerIdentifier string, CustomerEmail string, CarruerType string, CarruerNum string, Donation string, LoveCode string, Print string, InvoiceItemName string, InvoiceItemCount string, InvoiceItemWord string, InvoiceItemPrice string, CustomerName string, CustomerAddr string, HashKey string, HashIV string) (CheckMacValue string, slice []EcPayParm) {
+func SendPostToEcPayPeriod(CustomField1 string, CustomField2 string, CustomField3 string, MerchantID string, ITotalAmount int, TradeDesc string, ItemName string, ReturnURL string, ClientBackURL string, PeriodReturnURL string, CustomerIdentifier string, CustomerEmail string, CarruerType string, CarruerNum string, Donation string, LoveCode string, Print string, InvoiceItemName string, InvoiceItemCount string, InvoiceItemWord string, InvoiceItemPrice string, CustomerName string, CustomerAddr string, HashKey string, HashIV string) (CheckMacValue string, slice []EcPayParm) {
 	MerchantTradeNo := generateMerchantTradeNo(CustomField1)
 	MerchantTradeDate := time.Now().Format("2006/01/02 15:04:05")
 	PaymentType := "aio"
@@ -120,6 +120,7 @@ func SendPostToEcPayPeriod(CustomField1 string, CustomField2 string, MerchantID 
 	slice = append(slice, EcPayParm{"CustomerName", CustomerName})
 	slice = append(slice, EcPayParm{"CustomField1", CustomField1})
 	slice = append(slice, EcPayParm{"CustomField2", CustomField2})
+	slice = append(slice, EcPayParm{"CustomField3", CustomField3})
 
 	slice = append(slice, EcPayParm{"DelayDay", DelayDay})
 	slice = append(slice, EcPayParm{"Donation", Donation})
