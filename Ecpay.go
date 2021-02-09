@@ -224,6 +224,6 @@ func SendPostToEcPayPeriod(CustomField1 string, CustomField2 string, CustomField
 	return CheckMacValue, SliceFinal
 }
 
-func SendPostToEcPayOnce(MemberId int, MerchantID string, TotalAmount int, TradeDesc string, ItemName string) (err error) {
+func SendPostToEcPayOnce(CustomField1 string, CustomField2 string, CustomField3 string, MerchantID string, ITotalAmount int, TradeDesc string, ItemName string, ReturnURL string, ClientBackURL string, PeriodReturnURL string, CustomerIdentifier string, CustomerEmail string, CarruerType string, CarruerNum string, Donation string, LoveCode string, Print string, InvoiceItemName string, InvoiceItemCount string, InvoiceItemWord string, InvoiceItemPrice string, CustomerName string, CustomerAddr string, HashKey string, HashIV string) (CheckMacValue string, slice []EcPayParm) {
 	return
 }
