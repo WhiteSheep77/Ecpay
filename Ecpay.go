@@ -346,3 +346,37 @@ func SendPostToEcPayOnce(CustomField1 string, CustomField2 string, CustomField3 
 	return CheckMacValue, SliceFinal
 
 }
+
+func EcpayCalMacValue(slice []EcPayParm, HashKey string, HashIV string) (CheckMacValue string) {
+	for i := 0; i < len(slice); i++ {
+		if slice[i].Value == "" {
+			continue
+		}
+
+		if CheckMacValue != "" {
+			CheckMacValue = CheckMacValue + "&"
+		}
+
+		CheckMacValue = CheckMacValue + slice[i].Parameter + "=" + slice[i].Value
+	}
+
+	CheckMacValue = "HashKey=" + HashKey + "&" + CheckMacValue + "&HashIV=" + HashIV
+	fmt.Print("\nCheckMacValue=", CheckMacValue)
+
+	CheckMacValue = FormUrlEncode(CheckMacValue)
+	fmt.Print("\nCheckMacValue=", CheckMacValue)
+
+	CheckMacValue = strings.ToLower(CheckMacValue)
+	fmt.Print("\nCheckMacValue=", CheckMacValue)
+
+	sum := sha256.Sum256([]byte(CheckMacValue))
+	fmt.Printf("\n%x", sum)
+
+	CheckMacValue = fmt.Sprintf("%x", sum)
+	fmt.Print("\nCheckMacValue=", CheckMacValue)
+
+	CheckMacValue = strings.ToUpper(CheckMacValue)
+	fmt.Print("\nCheckMacValue=", CheckMacValue)
+
+	return CheckMacValue
+}
