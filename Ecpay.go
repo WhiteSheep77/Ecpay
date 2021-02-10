@@ -361,22 +361,16 @@ func EcpayCalMacValue(slice []EcPayParm, HashKey string, HashIV string) (CheckMa
 	}
 
 	CheckMacValue = "HashKey=" + HashKey + "&" + CheckMacValue + "&HashIV=" + HashIV
-	fmt.Print("\nCheckMacValue=", CheckMacValue)
 
 	CheckMacValue = FormUrlEncode(CheckMacValue)
-	fmt.Print("\nCheckMacValue=", CheckMacValue)
 
 	CheckMacValue = strings.ToLower(CheckMacValue)
-	fmt.Print("\nCheckMacValue=", CheckMacValue)
 
 	sum := sha256.Sum256([]byte(CheckMacValue))
-	fmt.Printf("\n%x", sum)
 
 	CheckMacValue = fmt.Sprintf("%x", sum)
-	fmt.Print("\nCheckMacValue=", CheckMacValue)
 
 	CheckMacValue = strings.ToUpper(CheckMacValue)
-	fmt.Print("\nCheckMacValue=", CheckMacValue)
 
 	return CheckMacValue
 }
