@@ -94,7 +94,7 @@ func SendPostToEcPayPeriod(CustomField1 string, CustomField2 string, CustomField
 	PeriodAmount := strconv.Itoa(ITotalAmount)
 	TotalAmount := strconv.Itoa(ITotalAmount)
 	PeriodType := "D"
-	Frequency := strconv.Itoa(30)
+	Frequency := CustomField3
 	ExecTimes := strconv.Itoa(999)
 	TaxType := "1"
 	DelayDay := "0"
