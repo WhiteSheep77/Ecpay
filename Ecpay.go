@@ -39,7 +39,7 @@ type EcPayParm struct {
 	Value     string
 }
 
-func EcpayCheckMacValue(RecvCheckMacValue string, slice []EcPayParm, HashKey string, HashIV string) (IsCheckOK bool) {
+func EcpayCheckMacValue(RecvCheckMacValue string, slice []EcPayParm, HashKey string, HashIV string) (IsCheckOK bool, CheckSum string) {
 
 	CheckMacValue := ""
 	for i := 0; i < len(slice); i++ {
@@ -73,9 +73,9 @@ func EcpayCheckMacValue(RecvCheckMacValue string, slice []EcPayParm, HashKey str
 	fmt.Print("\nCheckMacValue=", CheckMacValue)
 
 	if RecvCheckMacValue == CheckMacValue {
-		return true
+		return true, CheckMacValue
 	}
-	return false
+	return false, CheckMacValue
 }
 
 /*
